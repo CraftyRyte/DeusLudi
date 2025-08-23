@@ -1,0 +1,5 @@
+[info]
+name="mygame"
+
+[scenes]
+all_scenes=['scene1.ludsc']
