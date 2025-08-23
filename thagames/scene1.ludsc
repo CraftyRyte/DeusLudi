@@ -1,5 +1,0 @@
-[info]
-name="scene1"
-
-[gameobjects]
-all_gameobjects=['player.ludres']

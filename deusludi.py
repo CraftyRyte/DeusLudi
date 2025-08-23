@@ -1,5 +1,6 @@
 import gameobject as go
 import sys
+import ludilector as ll
 import game as gm
 # TODO: NO OOP SYSTEM FUNCTIONALITY OF DEUS LUDI
 # TODO: STORES GAMES, BUILD OPTIONS, UTILITY FUNCTIONS
@@ -42,7 +43,6 @@ def get_active_game():
 
 def hirearchy_panel_scr_func(obj):
     obj.update_rect()
-    print("h")
     obj.draw()
 
 if __name__ == "__main__":
@@ -50,17 +50,18 @@ if __name__ == "__main__":
     
     WIDTH, HEIGHT = 1800, 1000
     
-    deusludi = gm.Game()
-    editor = go.Scene()
-    deusludi.add_scene(editor)
-    deusludi.set_active_scene(editor)
+    deusludi = ll.load_game("./thagames/mygame.ludi.json")
+    # editor = go.Scene()
+    # deusludi.add_scene(editor)
+    # deusludi.set_active_scene(editor)
 
-    hirearchy_panel = go.RectangleGameObject(go.Transform(100, HEIGHT/2, 0, 0, 200, HEIGHT), color='grey')
-    editor.add_gameobject(hirearchy_panel)
+    # hirearchy_panel = go.RectangleGameObject(go.Transform(100, HEIGHT/2, 0, 0, 200, HEIGHT), color='grey')
+    # editor.add_gameobject(hirearchy_panel)
     
-    hirearchy_panel_script = go.Script(hirearchy_panel)
+    # hirearchy_panel_script = go.Script(hirearchy_panel)
     
-    editor.link_script_and_object(hirearchy_panel, hirearchy_panel_script, hirearchy_panel_scr_func)
+    editor = deusludi.active_scene
+    editor.link_script_and_object(editor.gameobjects[0], editor.gameobjects[0].script, hirearchy_panel_scr_func)
    
     screen = pyg.display.set_mode((WIDTH, HEIGHT))
     pyg.display.set_caption("Deus Ludi")

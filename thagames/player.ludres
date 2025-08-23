@@ -1,6 +1,0 @@
-[info]
-name="player"
-
-[properties]
-transform=[450, 450, 0, 0, 25, 25]
-script="$PROJECT/player_script.py"

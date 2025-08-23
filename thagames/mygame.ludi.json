@@ -1,0 +1,7 @@
+
+{
+    "name": "mygame",
+    "scenes": {
+        "all_scenes": ["./thagames/scene1.ludsc.json"]
+    }
+}

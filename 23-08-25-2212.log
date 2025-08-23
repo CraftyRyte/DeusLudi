@@ -1,0 +1,17 @@
+SO I JUST ACHEIVED SUCCESS ON STORING GAME DATA ON A JSON FILE AND THEN LOADING IT AS A PYTHON OBJECT IN RUNTIME.
+FILES THAT I EDITED WERE ludilector.py, deusludi.py, gameobject.py
+
+I have the test game files mygame.ludi.json, mygame.ludsc.json, mygame.ludres.json in thagames (DIR)
+
+.ludi.json: it is the file extension for the file that stores data for the 'Game' object in gameobjects.py
+.ludsc.json: it is the file extension for the file that stores data for the 'Scene' object in gameobjects.py
+.ludres.json: it is the file extension for the file that stores data for the 'GameObject' resources in gameobjects.py
+
+I can currently successfull load all the games, scenes and gameobjects from the json files to python objects in runtime.
+Few things i want to add next:
+- Be able to uniquely distinguish games, scenes and gameobjects which can be easily done by user
+- This will allow for the user to properly set active scenes in their game
+- I want to be able to create a seperate file for the script and have my engine load that ( to better organisation)
+
+Few THings for the long goal:
+- a Deus Ludi GUI game editor so i do not have edit my testing games with code

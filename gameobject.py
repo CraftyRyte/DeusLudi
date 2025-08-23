@@ -3,13 +3,27 @@ import math
 
 
 class Transform:
-    def __init__(self, posx, posy, rot_x, rot_y, scal_x, scal_y):
-        self.x = posx
-        self.y = posy
-        self.rot_x = rot_x
-        self.rot_y = rot_y
-        self.scal_x = scal_x
-        self.scal_y = scal_y
+    def __init__(self, *args):
+        if len(args) == 6:
+            # Individual parameters
+            self.x = args[0]
+            self.y = args[1]
+            self.rot_x = args[2]
+            self.rot_y = args[3]
+            self.scal_x = args[4]
+            self.scal_y = args[5]
+        elif len(args) == 1 and isinstance(args[0], (list, tuple)):
+            # Transform list
+            transform_list = args[0]
+            self.x = transform_list[0]
+            self.y = transform_list[1]
+            self.rot_x = transform_list[2]
+            self.rot_y = transform_list[3]
+            self.scal_x = transform_list[4]
+            self.scal_y = transform_list[5]
+        else:
+            raise ValueError("Invalid arguments for Transform constructor")
+
 
 class Vector:
     def __init__(self, ihatl, jhatl):
@@ -43,7 +57,7 @@ class GameObject:
     # TODO: Add rotational functionality
     def __init__(self, transform: Transform):
         self.transform = transform
-        self.script: Script = None
+        self.script: Script = None #type: ignore
     
     def run_script(self):
         self.script.script_function(self)
@@ -104,6 +118,6 @@ class Scene:
 
 
 
-        
+
 
 
