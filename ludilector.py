@@ -9,10 +9,8 @@ The module supports loading:
 - Scene definition files (.ludsc.json) 
 - Game object resource files (.ludres.json)
 
-Author: DeusLudi Game Engine
+Author: CraftyRyte
 """
-
-import sys
 import os
 import pygame as pyg
 import gameobject as go
@@ -22,6 +20,37 @@ import json
 
 # Initialize Pygame - required for game engine functionality
 pyg.init()
+
+def load_gameobject_for_scene(scene_data):
+    for gameobject in scene_data["gameobjects"]["all_gameobjects"]:
+        # Open and parse each gameobject resource file (.ludres.json)
+        obj_file = open(gameobject)
+        obj_data = json.loads(obj_file.read())
+
+        # Create the appropriate gameobject type based on the type field
+        if obj_data["type"] == uc.game_object_types.get("rgo"):
+            # Rectangle Game Object - has visual properties like color
+            gameobject_runtime_object = go.RectangleGameObject(
+                go.Transform(obj_data["properties"]["transform"]),
+                obj_data["name"],
+                color=obj_data["properties"]["color"]
+            )
+        elif obj_data["type"] == uc.game_object_types.get("go"):
+            # Basic Game Object - only has transform properties
+            gameobject_runtime_object = go.GameObject(
+                go.Transform(obj_data["properties"]["transform"]),
+                obj_data["name"]
+            )
+        else:
+            # Unknown gameobject type - skip this object and continue
+            print(f"Invalid gameobject type: {obj_data['type']}")
+            obj_file.close()
+            continue
+
+        # MAKING THE BLANK THE SCRIPT
+        gameobject_runtime_object.script = go.Script(gameobject_runtime_object)
+        obj_file.close()
+    return gameobject_runtime_object
 
 def load_game(game_file_path):
     """
@@ -63,70 +92,44 @@ def load_game(game_file_path):
 
     # Use context manager to ensure proper file handling
     with game_file:
-        # Parse the JSON data from the game definition file
-        game_data = json.loads(game_file.read())
+        try:
+            # Parse the JSON data from the game definition file
+            game_data = json.loads(game_file.read())
+        except json.JSONDecodeError:
+            print(f"Error parsing game file: {game_file_path}")
+            return None
         
-        # Iterate through each scene referenced in the game file
-        for scene in game_data["scenes"]["all_scenes"]:
-            # Open and parse each scene file (.ludsc.json)
-            scene_file = open(scene, 'r')
-            scene_data = json.loads(scene_file.read())
-            # Create a new Scene runtime object
-            scene_runtime_object = go.Scene()
+        try:
+            # Iterate through each scene referenced in the game file
+            for scene in game_data["scenes"]["all_scenes"]:
+                # Open and parse each scene file (.ludsc.json)
+                scene_file = open(scene, 'r')
+                scene_data = json.loads(scene_file.read())
+                # Create a new Scene runtime object
+                scene_runtime_object = go.Scene()
 
-            # Process all gameobjects defined in this scene
-            for gameobject in scene_data["gameobjects"]["all_gameobjects"]:
-                # Open and parse each gameobject resource file (.ludres.json)
-                obj_file = open(gameobject)
-                obj_data = json.loads(obj_file.read())
-
-                # Create the appropriate gameobject type based on the type field
-                if obj_data["type"] == uc.game_object_types.get("rgo"):
-                    # Rectangle Game Object - has visual properties like color
-                    gameobject_runtime_object = go.RectangleGameObject(
-                        go.Transform(obj_data["properties"]["transform"]), 
-                        color=obj_data["properties"]["color"]
-                    )
-                elif obj_data["type"] == uc.game_object_types.get("go"):
-                    # Basic Game Object - only has transform properties
-                    gameobject_runtime_object = go.GameObject(
-                        go.Transform(obj_data["properties"]["transform"])
-                    )
-                else:
-                    # Unknown gameobject type - skip this object and continue
-                    print(f"Invalid gameobject type: {obj_data['type']}")
-                    continue
-
-                # MAKING THE BLANK THE SCRIPT
-                gameobject_runtime_object.script = go.Script(gameobject_runtime_object)
-                # Add the created gameobject to the current scene
+                gameobject_runtime_object = load_gameobject_for_scene(scene_data)
                 scene_runtime_object.add_gameobject(gameobject_runtime_object)
-                # Close the gameobject resource file
-                obj_file.close()
 
-            # Add the completed scene to our scenes list
-            scenes.append(scene_runtime_object)
-            # Close the scene definition file
-            scene_file.close()
-            
-        # Add all loaded scenes to the game runtime object
-        for scene2 in scenes:
-            game_runtime_object.add_scene(scene2)
 
-        # Set the first scene as the active/starting scene
-        game_runtime_object.set_active_scene(scenes[0])
+                # Add the completed scene to our scenes list
+                scenes.append(scene_runtime_object)
+                # Close the scene definition file
+                scene_file.close()
+        except Exception as e:
+            print(f"Error loading game file: {e}")
+            return None
+        
+        try:
+            # Add all loaded scenes to the game runtime object
+            for scene2 in scenes:
+                game_runtime_object.add_scene(scene2)
+
+            # Set the first scene as the active/starting scene
+            game_runtime_object.set_active_scene(scenes[0])
+        except Exception as e:
+            print(f"Error loading game file: {e}")
+            return None
     
     # Return the fully loaded and initialized game object
     return game_runtime_object
-
-# def link_script(game_object: go.GameObject, scene: go.Scene, obj_data):
-#     script_file = open(obj_data["properties"]["script"], 'r')
-#     game_object.script = go.Script(game_object)
-#     content = script_file.read()
-#     for i in range(len(content)):
-#         if content[i]=='_':
-#             if checkifinfo(content, i):
-#                 json_content = extract_json(content, i)
-    
-#     json_content = json.loads(json_content)
-#     game_object.script.script_function = json_content["main"]

@@ -11,35 +11,6 @@ import game as gm
 
 import pygame as pyg
 
-all_games = []
-active_game: gm.Game = None #type: ignore
-
-def set_active_game(game: gm.Game):
-    global active_game
-    if game not in all_games:
-        print("game is not registered!")
-        return
-    active_game = game
-
-def add_game(game: gm.Game):
-    if game in all_games:
-        #* Not sure if this is accurate
-        print("game is already there!")
-        return
-    all_games.append(game)
-
-def delete_game(game: gm.Game):
-    if game not in all_games:
-        print("game is not registered")
-        return
-    all_games.remove(game)
-    
-def get_active_game():
-    if active_game == None:
-        print("No active game!")
-        return
-    return active_game
-
 
 def hirearchy_panel_scr_func(obj):
     obj.update_rect()
@@ -51,14 +22,6 @@ if __name__ == "__main__":
     WIDTH, HEIGHT = 1800, 1000
     
     deusludi = ll.load_game("./thagames/mygame.ludi.json")
-    # editor = go.Scene()
-    # deusludi.add_scene(editor)
-    # deusludi.set_active_scene(editor)
-
-    # hirearchy_panel = go.RectangleGameObject(go.Transform(100, HEIGHT/2, 0, 0, 200, HEIGHT), color='grey')
-    # editor.add_gameobject(hirearchy_panel)
-    
-    # hirearchy_panel_script = go.Script(hirearchy_panel)
     
     editor = deusludi.active_scene
     editor.link_script_and_object(editor.gameobjects[0], editor.gameobjects[0].script, hirearchy_panel_scr_func)

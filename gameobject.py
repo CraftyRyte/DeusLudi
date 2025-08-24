@@ -55,16 +55,17 @@ class Vector:
 
 class GameObject:
     # TODO: Add rotational functionality
-    def __init__(self, transform: Transform):
+    def __init__(self, transform: Transform, name: str):
         self.transform = transform
         self.script: Script = None #type: ignore
+        self.name = name
     
     def run_script(self):
         self.script.script_function(self)
 
 class RectangleGameObject(GameObject):
-    def __init__(self, transform: Transform, color=None):
-        super().__init__(transform)
+    def __init__(self, transform: Transform, name: str, color=None):
+        super().__init__(transform, name)
         self.color = color
         self.rect = pyg.FRect((self.transform.x, self.transform.y), (self.transform.scal_x, self.transform.scal_y))
         self.rect.center = (self.transform.x, self.transform.y)
