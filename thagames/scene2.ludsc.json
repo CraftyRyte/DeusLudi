@@ -1,0 +1,6 @@
+{
+    "name": "scene2",
+    "gameobjects": {
+        "all_gameobjects": ["./thagames/player2.ludres.json"]
+    }
+}

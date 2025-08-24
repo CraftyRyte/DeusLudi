@@ -1,0 +1,6 @@
+{
+    "name": "thenewgame",
+    "scenes": {
+        "all_scenes": ["./thagames/scene2.ludsc.json"]
+    }
+}

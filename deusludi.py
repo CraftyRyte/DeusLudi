@@ -21,7 +21,7 @@ if __name__ == "__main__":
     
     WIDTH, HEIGHT = 1800, 1000
     
-    deusludi = ll.load_game("./thagames/mygame.ludi.json")
+    deusludi = ll.load_game(sys.argv[1])
     
     editor = deusludi.active_scene
     editor.link_script_and_object(editor.gameobjects[0], editor.gameobjects[0].script, hirearchy_panel_scr_func)
